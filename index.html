@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Gaming Portal - Dhruv Tuli</title>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0f1f, #1a0240, #001f3f);
+            background-size: 400% 400%;
+            animation: gradientBG 10s ease infinite;
+            color: #fff;
+            text-align: center;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        header {
+            padding: 20px;
+            font-size: 26px;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .title {
+            margin-top: 80px;
+            font-size: 45px;
+            font-weight: 600;
+            text-shadow: 0 0 10px #00eaff, 0 0 20px #00eaff;
+        }
+
+        .subtitle {
+            margin-top: 10px;
+            font-size: 20px;
+            opacity: 0.8;
+        }
+
+        .game-btn {
+            display: inline-block;
+            margin-top: 40px;
+            padding: 18px 35px;
+            background: #00eaff;
+            color: #000;
+            font-size: 22px;
+            border-radius: 10px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: 0.3s;
+            box-shadow: 0 0 18px #00eaff, 0 0 25px #00eaff;
+            cursor: pointer;
+        }
+
+        .game-btn:hover {
+            transform: scale(1.08);
+            box-shadow: 0 0 25px #00eaff, 0 0 50px #00eaff;
+        }
+
+        #gameContainer {
+            margin: 40px auto;
+            width: 700px;
+            height: 450px;
+            display: none;
+            border: 3px solid #00eaff;
+            border-radius: 12px;
+            box-shadow: 0 0 25px #00eaff;
+            background: #000;
+        }
+
+        footer {
+            margin-top: 60px;
+            padding-bottom: 20px;
+            font-size: 14px;
+            opacity: 0.6;
+        }
+    </style>
+
+</head>
+<body>
+
+<header>
+    Dhruv Tuli | Reg No: 114
+</header>
+
+<h1 class="title">Welcome to My Gaming Portal</h1>
+<p class="subtitle">Click below to play the game directly here!</p>
+
+<button class="game-btn" onclick="startGame()">🎮 Play Pong Game</button>
+
+<!-- Game Box -->
+<canvas id="gameContainer" width="700" height="450"></canvas>
+
+<footer>
+    © 2025 Dhruv Tuli • Gaming Portal Project
+</footer>
+
+<script>
+    function startGame() {
+        document.getElementById('gameContainer').style.display = "block";
+
+        const canvas = document.getElementById("gameContainer");
+        const ctx = canvas.getContext("2d");
+
+        let paddleHeight = 80;
+        let paddleWidth = 10;
+        let playerY = canvas.height / 2 - paddleHeight / 2;
+        let aiY = canvas.height / 2 - paddleHeight / 2;
+
+        let ballX = canvas.width / 2;
+        let ballY = canvas.height / 2;
+        let ballSize = 10;
+        let ballSpeedX = 4;
+        let ballSpeedY = 4;
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = "#00eaff";
+            ctx.fillRect(0, playerY, paddleWidth, paddleHeight);
+            ctx.fillRect(canvas.width - paddleWidth, aiY, paddleWidth, paddleHeight);
+
+            ctx.beginPath();
+            ctx.arc(ballX, ballY, ballSize, 0, Math.PI * 2);
+            ctx.fill();
+
+            ballX += ballSpeedX;
+            ballY += ballSpeedY;
+
+            if (ballY + ballSize > canvas.height || ballY - ballSize < 0) {
+                ballSpeedY = -ballSpeedY;
+            }
+
+            if (ballX - ballSize < paddleWidth &&
+                ballY > playerY &&
+                ballY < playerY + paddleHeight) {
+                ballSpeedX = -ballSpeedX;
+            }
+
+            if (ballX + ballSize > canvas.width - paddleWidth &&
+                ballY > aiY &&
+                ballY < aiY + paddleHeight) {
+                ballSpeedX = -ballSpeedX;
+            }
+
+            if (ballX < 0 || ballX > canvas.width) {
+                ballX = canvas.width / 2; 
+                ballY = canvas.height / 2;
+            }
+
+            aiY += ((ballY - (aiY + paddleHeight / 2))) * 0.08;
+
+            requestAnimationFrame(draw);
+        }
+
+        document.addEventListener("mousemove", (e) => {
+            playerY = e.clientY - canvas.getBoundingClientRect().top - paddleHeight / 2;
+        });
+
+        draw();
+    }
+</script>
+
+</body>
+</html>
